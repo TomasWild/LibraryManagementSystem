@@ -1,10 +1,12 @@
 using LibraryManagementSystem.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagementSystem.Data;
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext(options)
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    : IdentityDbContext<ApplicationUser>(options)
 {
     public DbSet<LibraryCard> LibraryCards { get; set; }
     public DbSet<Member> Members { get; set; }
@@ -42,5 +44,21 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasOne(bc => bc.Book)
             .WithMany(b => b.BookCategories)
             .HasForeignKey(bc => bc.BookId);
+
+        // Seed roles
+        builder.Entity<IdentityRole>().HasData(
+            new IdentityRole
+            {
+                Id = "1",
+                Name = "Admin",
+                NormalizedName = "ADMIN"
+            },
+            new IdentityRole
+            {
+                Id = "2",
+                Name = "User",
+                NormalizedName = "USER"
+            }
+        );
     }
 }

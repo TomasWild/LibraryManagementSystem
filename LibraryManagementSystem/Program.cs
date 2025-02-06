@@ -49,12 +49,15 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddTransient<LoggingMiddleware>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
+builder.Services.AddControllers();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseDeveloperExceptionPage();
 }
 
 app.UseHttpsRedirection();
@@ -63,5 +66,7 @@ app.UseMiddleware<LoggingMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();
