@@ -2,6 +2,7 @@ using AutoMapper;
 using LibraryManagementSystem.Dtos.Book;
 using LibraryManagementSystem.Models;
 using LibraryManagementSystem.Repositories.Interfaces;
+using LibraryManagementSystem.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,9 +40,9 @@ public class BookController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "Admin, User, Librarian")]
-    public async Task<IActionResult> GetAllBooks()
+    public async Task<IActionResult> GetAllBooks([FromQuery] QueryObject query)
     {
-        var books = await _bookRepository.GetAllBooksAsync();
+        var books = await _bookRepository.GetAllBooksAsync(query);
         var booksDto = books.Select(_mapper.Map<BookDto>).ToList();
 
         return Ok(booksDto);

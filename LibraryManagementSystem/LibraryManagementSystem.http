@@ -44,6 +44,11 @@ Accept: application/json
 
 ###
 
+GET {{LibraryManagementSystem_HostAddress}}/api/v1/Book?SortBy=author&IsDescending=false
+Accept: application/json
+
+###
+
 GET {{LibraryManagementSystem_HostAddress}}/api/v1/Book/{{id}}
 Accept: application/json
 

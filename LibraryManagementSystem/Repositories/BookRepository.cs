@@ -2,6 +2,7 @@ using LibraryManagementSystem.Data;
 using LibraryManagementSystem.Dtos.Book;
 using LibraryManagementSystem.Models;
 using LibraryManagementSystem.Repositories.Interfaces;
+using LibraryManagementSystem.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagementSystem.Repositories;
@@ -32,15 +33,41 @@ public class BookRepository : IBookRepository
         return book;
     }
 
-    public async Task<List<Book>> GetAllBooksAsync()
+    public async Task<List<Book>> GetAllBooksAsync(QueryObject query)
     {
-        var books = await _context.Books
+        var books = _context.Books
             .Include(b => b.Author)
             .Include(b => b.BookCategories)
             .ThenInclude(bc => bc.Category)
-            .ToListAsync();
+            .AsQueryable();
 
-        return books;
+        if (!string.IsNullOrWhiteSpace(query.Title))
+        {
+            books = books.Where(b => b.Title.Contains(query.Title));
+        }
+
+        if (query.CategoryId.HasValue)
+        {
+            books = books.Where(b => b.BookCategories.Any(bc => bc.CategoryId == query.CategoryId.Value));
+        }
+
+        if (!string.IsNullOrWhiteSpace(query.SortBy))
+        {
+            books = query.SortBy.ToLowerInvariant() switch
+            {
+                "title" => query.IsDescending
+                    ? books.OrderByDescending(b => b.Title)
+                    : books.OrderBy(b => b.Title),
+                "author" => query.IsDescending
+                    ? books.OrderByDescending(b => b.Author.FirstName + " " + b.Author.LastName)
+                    : books.OrderBy(b => b.Author.FirstName + " " + b.Author.LastName),
+                _ => books
+            };
+        }
+
+        var skipNumber = (query.PageNumber - 1) * query.PageSize;
+
+        return await books.Skip(skipNumber).Take(query.PageSize).ToListAsync();
     }
 
     public async Task<Book?> GetBookByIdAsync(int id)
