@@ -1,4 +1,5 @@
 @LibraryManagementSystem_HostAddress = http://localhost:5059
+@id = 8
 
 ### Register
 
@@ -21,3 +22,51 @@ Content-Type: application/json
   "Email": "john.doe@example.com",
   "Password": "Pass@word123"
 }
+
+### Book
+
+POST {{LibraryManagementSystem_HostAddress}}/api/v1/Book
+Content-Type: application/json
+
+{
+  "title": "Book Title Test Number 8",
+  "synopsis": "A book synopsis for a new test.",
+  "authorId": 1,
+  "categoryIds": [
+    1
+  ]
+}
+
+###
+
+GET {{LibraryManagementSystem_HostAddress}}/api/v1/Book
+Accept: application/json
+
+###
+
+GET {{LibraryManagementSystem_HostAddress}}/api/v1/Book/{{id}}
+Accept: application/json
+
+###
+
+PUT {{LibraryManagementSystem_HostAddress}}/api/v1/Book/{{id}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "Title": "Updated Book Title",
+  "Synopsis": "Updated book synopsis.",
+  "AuthorId": 2,
+  "CategoryIds": [
+    1,
+    2,
+    3
+  ]
+}
+
+###
+
+DELETE {{LibraryManagementSystem_HostAddress}}/api/v1/Book/{{id}}
+Accept: application/json
+
+###

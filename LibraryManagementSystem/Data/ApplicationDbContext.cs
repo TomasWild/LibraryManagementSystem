@@ -60,5 +60,45 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 NormalizedName = "USER"
             }
         );
+
+        // Seed categories
+        builder.Entity<Category>().HasData(
+            new Category
+            {
+                Id = 1,
+                Name = "Academic",
+            },
+            new Category
+            {
+                Id = 2,
+                Name = "Science Fiction",
+            },
+            new Category
+            {
+                Id = 3,
+                Name = "Adventure",
+            },
+            new Category
+            {
+                Id = 4,
+                Name = "Romance",
+            }
+        );
+
+        // Seed authors
+        builder.Entity<Author>().HasData(
+            new Author
+            {
+                Id = 1,
+                FirstName = "Agatha",
+                LastName = "Christie"
+            },
+            new Author
+            {
+                Id = 2,
+                FirstName = "Mark",
+                LastName = "Twain"
+            }
+        );
     }
 }

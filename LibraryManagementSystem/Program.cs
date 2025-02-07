@@ -1,7 +1,10 @@
 using System.Text;
 using LibraryManagementSystem.Data;
+using LibraryManagementSystem.Mappers;
 using LibraryManagementSystem.Middlewares;
 using LibraryManagementSystem.Models;
+using LibraryManagementSystem.Repositories;
+using LibraryManagementSystem.Repositories.Interfaces;
 using LibraryManagementSystem.Service;
 using LibraryManagementSystem.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -46,8 +49,11 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddAutoMapper(typeof(BookProfile));
+
 builder.Services.AddTransient<LoggingMiddleware>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IBookRepository, BookRepository>();
 
 builder.Services.AddControllers();
 
