@@ -58,6 +58,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 Id = "2",
                 Name = "User",
                 NormalizedName = "USER"
+            },
+            new IdentityRole
+            {
+                Id = "3",
+                Name = "Librarian",
+                NormalizedName = "LIBRARIAN"
             }
         );
 
