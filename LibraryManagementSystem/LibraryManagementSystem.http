@@ -19,8 +19,8 @@ POST {{LibraryManagementSystem_HostAddress}}/api/v1/Account/login
 Content-Type: application/json
 
 {
-  "Email": "john.doe@example.com",
-  "Password": "Pass@word123"
+  "Email": "jane.doe@example.com",
+  "Password": "Pass@word987"
 }
 
 ### Book

@@ -2,12 +2,14 @@ using AutoMapper;
 using LibraryManagementSystem.Dtos.Book;
 using LibraryManagementSystem.Models;
 using LibraryManagementSystem.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagementSystem.Controllers;
 
 [ApiController]
 [Route("api/v1/[controller]")]
+[Authorize]
 public class BookController : ControllerBase
 {
     private readonly IBookRepository _bookRepository;
@@ -20,6 +22,7 @@ public class BookController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin, Librarian")]
     public async Task<IActionResult> CreateBook([FromBody] CreateBookRequestDto bookRequestDto)
     {
         if (!ModelState.IsValid)
@@ -35,6 +38,7 @@ public class BookController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin, User, Librarian")]
     public async Task<IActionResult> GetAllBooks()
     {
         var books = await _bookRepository.GetAllBooksAsync();
@@ -44,6 +48,7 @@ public class BookController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
+    [Authorize(Roles = "Admin, User, Librarian")]
     public async Task<IActionResult> GetBookById([FromRoute] int id)
     {
         var book = await _bookRepository.GetBookByIdAsync(id);
@@ -59,6 +64,7 @@ public class BookController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [Authorize(Roles = "Admin, Librarian")]
     public async Task<IActionResult> UpdateBook([FromRoute] int id, [FromBody] UpdateBookRequestDto bookRequestDto)
     {
         if (!ModelState.IsValid)
@@ -79,6 +85,7 @@ public class BookController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteBook([FromRoute] int id)
     {
         var book = await _bookRepository.DeleteBookByIdAsync(id);
