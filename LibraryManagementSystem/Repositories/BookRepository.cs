@@ -16,7 +16,7 @@ public class BookRepository : IBookRepository
         _context = context;
     }
 
-    public async Task<Book> CreateBookAsync(Book book, List<int> categoryIds)
+    public async Task<Book> CreateBookAsync(Book book, IEnumerable<int> categoryIds)
     {
         var categories = await _context.Categories
             .Where(c => categoryIds.Contains(c.Id))

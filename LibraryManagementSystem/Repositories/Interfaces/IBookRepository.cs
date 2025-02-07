@@ -6,7 +6,7 @@ namespace LibraryManagementSystem.Repositories.Interfaces;
 
 public interface IBookRepository
 {
-    Task<Book> CreateBookAsync(Book book, List<int> categoryIds);
+    Task<Book> CreateBookAsync(Book book, IEnumerable<int> categoryIds);
     Task<List<Book>> GetAllBooksAsync(QueryObject query);
     Task<Book?> GetBookByIdAsync(int id);
     Task<Book?> UpdateBookByIdAsync(int id, UpdateBookRequestDto bookRequestDto);
