@@ -1,7 +1,9 @@
+using System.Text.Json;
 using AutoMapper;
 using LibraryManagementSystem.Dtos.Book;
 using LibraryManagementSystem.Models;
 using LibraryManagementSystem.Repositories.Interfaces;
+using LibraryManagementSystem.Service.Interfaces;
 using LibraryManagementSystem.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,11 +17,13 @@ public class BookController : ControllerBase
 {
     private readonly IBookRepository _bookRepository;
     private readonly IMapper _mapper;
+    private readonly ICacheService _cacheService;
 
-    public BookController(IBookRepository bookRepository, IMapper mapper)
+    public BookController(IBookRepository bookRepository, IMapper mapper, ICacheService cacheService)
     {
         _bookRepository = bookRepository;
         _mapper = mapper;
+        _cacheService = cacheService;
     }
 
     [HttpPost]
@@ -42,8 +46,18 @@ public class BookController : ControllerBase
     [Authorize(Roles = "Admin, User, Librarian")]
     public async Task<IActionResult> GetAllBooks([FromQuery] QueryObject query)
     {
+        var cacheKey = $"books_{JsonSerializer.Serialize(query)}";
+        var cachedBooks = await _cacheService.GetAsync<List<BookDto>>(cacheKey);
+
+        if (cachedBooks is not null)
+        {
+            return Ok(cachedBooks);
+        }
+
         var books = await _bookRepository.GetAllBooksAsync(query);
         var booksDto = books.Select(_mapper.Map<BookDto>).ToList();
+
+        await _cacheService.SetAsync(cacheKey, booksDto);
 
         return Ok(booksDto);
     }
@@ -52,6 +66,14 @@ public class BookController : ControllerBase
     [Authorize(Roles = "Admin, User, Librarian")]
     public async Task<IActionResult> GetBookById([FromRoute] int id)
     {
+        var cacheKey = $"books_{id}";
+        var cachedBook = await _cacheService.GetAsync<BookDto>(cacheKey);
+
+        if (cachedBook is not null)
+        {
+            return Ok(cachedBook);
+        }
+
         var book = await _bookRepository.GetBookByIdAsync(id);
 
         if (book is null)
@@ -60,6 +82,8 @@ public class BookController : ControllerBase
         }
 
         var bookDto = _mapper.Map<BookDto>(book);
+
+        await _cacheService.SetAsync(cacheKey, bookDto);
 
         return Ok(bookDto);
     }

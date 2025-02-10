@@ -50,10 +50,14 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddDistributedMemoryCache();
+
 builder.Services.AddAutoMapper(typeof(BookProfile));
 builder.Services.AddAutoMapper(typeof(MemberProfile));
 
 builder.Services.AddTransient<LoggingMiddleware>();
+
+builder.Services.AddSingleton<ICacheService, CacheService>();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();

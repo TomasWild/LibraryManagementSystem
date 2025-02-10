@@ -2,6 +2,7 @@ using AutoMapper;
 using LibraryManagementSystem.Dtos.Member;
 using LibraryManagementSystem.Models;
 using LibraryManagementSystem.Repositories.Interfaces;
+using LibraryManagementSystem.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,11 +15,13 @@ public class MemberController : ControllerBase
 {
     private readonly IMemberRepository _memberRepository;
     private readonly IMapper _mapper;
+    private readonly ICacheService _cacheService;
 
-    public MemberController(IMemberRepository memberRepository, IMapper mapper)
+    public MemberController(IMemberRepository memberRepository, IMapper mapper, ICacheService cacheService)
     {
         _memberRepository = memberRepository;
         _mapper = mapper;
+        _cacheService = cacheService;
     }
 
     [HttpPost]
@@ -39,8 +42,18 @@ public class MemberController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<MemberDto>> GetAllMembers()
     {
+        var cacheKey = $"members_{DateTime.UtcNow:yyyyMMdd}";
+        var cachedMembers = await _cacheService.GetAsync<List<MemberDto>>(cacheKey);
+
+        if (cachedMembers is not null)
+        {
+            Ok(cachedMembers);
+        }
+
         var members = await _memberRepository.GetAllMembersAsync();
         var membersDto = members.Select(_mapper.Map<MemberDto>).ToList();
+
+        await _cacheService.SetAsync(cacheKey, membersDto);
 
         return Ok(membersDto);
     }
@@ -48,6 +61,14 @@ public class MemberController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<ActionResult<MemberDto>> GetMemberById([FromRoute] int id)
     {
+        var cacheKey = $"member_{id}";
+        var cachedMember = await _cacheService.GetAsync<MemberDto>(cacheKey);
+
+        if (cachedMember is not null)
+        {
+            return Ok(cachedMember);
+        }
+
         var member = await _memberRepository.GetMemberByIdAsync(id);
 
         if (member is null)
@@ -56,6 +77,8 @@ public class MemberController : ControllerBase
         }
 
         var memberDto = _mapper.Map<MemberDto>(member);
+
+        await _cacheService.SetAsync(cacheKey, memberDto);
 
         return Ok(memberDto);
     }

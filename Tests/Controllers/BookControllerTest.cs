@@ -3,6 +3,7 @@ using LibraryManagementSystem.Controllers;
 using LibraryManagementSystem.Dtos.Book;
 using LibraryManagementSystem.Models;
 using LibraryManagementSystem.Repositories.Interfaces;
+using LibraryManagementSystem.Service.Interfaces;
 using LibraryManagementSystem.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -17,7 +18,8 @@ public class BookControllerTest
         // Arrange
         var mockRepository = new Mock<IBookRepository>();
         var mockMapper = new Mock<IMapper>();
-        var controller = new BookController(mockRepository.Object, mockMapper.Object);
+        var mockService = new Mock<ICacheService>();
+        var controller = new BookController(mockRepository.Object, mockMapper.Object, mockService.Object);
 
         var bookRequest = new CreateBookRequestDto
             { Title = "Book Title", Synopsis = "Book synopsis.", CategoryIds = [1] };
@@ -48,7 +50,8 @@ public class BookControllerTest
         // Arrange
         var mockRepository = new Mock<IBookRepository>();
         var mockMapper = new Mock<IMapper>();
-        var controller = new BookController(mockRepository.Object, mockMapper.Object);
+        var mockService = new Mock<ICacheService>();
+        var controller = new BookController(mockRepository.Object, mockMapper.Object, mockService.Object);
 
         controller.ModelState.AddModelError("Title", "The Title field is required.");
 
@@ -77,7 +80,8 @@ public class BookControllerTest
         // Arrange
         var mockRepository = new Mock<IBookRepository>();
         var mockMapper = new Mock<IMapper>();
-        var controller = new BookController(mockRepository.Object, mockMapper.Object);
+        var mockService = new Mock<ICacheService>();
+        var controller = new BookController(mockRepository.Object, mockMapper.Object, mockService.Object);
 
         var books = new List<Book>
         {
@@ -115,7 +119,8 @@ public class BookControllerTest
         // Arrange
         var mockRepository = new Mock<IBookRepository>();
         var mockMapper = new Mock<IMapper>();
-        var controller = new BookController(mockRepository.Object, mockMapper.Object);
+        var mockService = new Mock<ICacheService>();
+        var controller = new BookController(mockRepository.Object, mockMapper.Object, mockService.Object);
 
         mockRepository.Setup(r => r.GetAllBooksAsync(It.IsAny<QueryObject>()))
             .ReturnsAsync([]);
@@ -139,7 +144,8 @@ public class BookControllerTest
         // Arrange
         var mockRepository = new Mock<IBookRepository>();
         var mockMapper = new Mock<IMapper>();
-        var controller = new BookController(mockRepository.Object, mockMapper.Object);
+        var mockService = new Mock<ICacheService>();
+        var controller = new BookController(mockRepository.Object, mockMapper.Object, mockService.Object);
 
         mockRepository.Setup(r => r.GetBookByIdAsync(It.IsAny<int>()))
             .ReturnsAsync(new Book { Id = 1, Title = "Book Title 1", Synopsis = "Book 1 synopsis." });
@@ -165,7 +171,8 @@ public class BookControllerTest
         // Arrange
         var mockRepository = new Mock<IBookRepository>();
         var mockMapper = new Mock<IMapper>();
-        var controller = new BookController(mockRepository.Object, mockMapper.Object);
+        var mockService = new Mock<ICacheService>();
+        var controller = new BookController(mockRepository.Object, mockMapper.Object, mockService.Object);
 
         mockRepository.Setup(r => r.GetBookByIdAsync(It.IsAny<int>()))
             .ReturnsAsync((Book?)null);
@@ -184,7 +191,8 @@ public class BookControllerTest
         // Arrange
         var mockRepository = new Mock<IBookRepository>();
         var mockMapper = new Mock<IMapper>();
-        var controller = new BookController(mockRepository.Object, mockMapper.Object);
+        var mockService = new Mock<ICacheService>();
+        var controller = new BookController(mockRepository.Object, mockMapper.Object, mockService.Object);
 
         var existingBook = new Book
         {
@@ -225,7 +233,8 @@ public class BookControllerTest
         // Arrange
         var mockRepository = new Mock<IBookRepository>();
         var mockMapper = new Mock<IMapper>();
-        var controller = new BookController(mockRepository.Object, mockMapper.Object);
+        var mockService = new Mock<ICacheService>();
+        var controller = new BookController(mockRepository.Object, mockMapper.Object, mockService.Object);
 
         var updateRequest = new UpdateBookRequestDto
         {
@@ -249,7 +258,8 @@ public class BookControllerTest
         // Arrange
         var mockRepository = new Mock<IBookRepository>();
         var mockMapper = new Mock<IMapper>();
-        var controller = new BookController(mockRepository.Object, mockMapper.Object);
+        var mockService = new Mock<ICacheService>();
+        var controller = new BookController(mockRepository.Object, mockMapper.Object, mockService.Object);
 
         var book = new Book { Id = 1, Title = "Book Title", Synopsis = "Book synopsis." };
 
@@ -270,7 +280,8 @@ public class BookControllerTest
         // Arrange
         var mockRepository = new Mock<IBookRepository>();
         var mockMapper = new Mock<IMapper>();
-        var controller = new BookController(mockRepository.Object, mockMapper.Object);
+        var mockService = new Mock<ICacheService>();
+        var controller = new BookController(mockRepository.Object, mockMapper.Object, mockService.Object);
 
         mockRepository.Setup(r => r.DeleteBookByIdAsync(It.IsAny<int>()))
             .ReturnsAsync((Book?)null);
