@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using System.Text.Json;
 using LibraryManagementSystem.Service.Interfaces;
 using Microsoft.Extensions.Caching.Distributed;
@@ -7,7 +6,6 @@ namespace LibraryManagementSystem.Service;
 
 public class CacheService : ICacheService
 {
-    private static readonly ConcurrentDictionary<string, bool> CacheKeys = new();
     private readonly IDistributedCache _distributedCache;
 
     public CacheService(IDistributedCache distributedCache)
@@ -34,14 +32,10 @@ public class CacheService : ICacheService
         var cachedValue = JsonSerializer.Serialize(value);
 
         await _distributedCache.SetStringAsync(key, cachedValue, cancellationToken);
-
-        CacheKeys.TryAdd(key, false);
     }
 
     public async Task RemoveAsync(string key, CancellationToken cancellationToken = default)
     {
         await _distributedCache.RemoveAsync(key, cancellationToken);
-
-        CacheKeys.TryRemove(key, out _);
     }
 }
