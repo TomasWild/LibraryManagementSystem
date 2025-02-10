@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using LibraryManagementSystem.Data;
 using LibraryManagementSystem.Mappers;
 using LibraryManagementSystem.Middlewares;
@@ -50,12 +51,15 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddAutoMapper(typeof(BookProfile));
+builder.Services.AddAutoMapper(typeof(MemberProfile));
 
 builder.Services.AddTransient<LoggingMiddleware>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 
 var app = builder.Build();
 

@@ -1,5 +1,5 @@
 @LibraryManagementSystem_HostAddress = http://localhost:5059
-@id = 8
+@id = 1
 
 ### Register
 
@@ -19,8 +19,8 @@ POST {{LibraryManagementSystem_HostAddress}}/api/v1/Account/login
 Content-Type: application/json
 
 {
-  "Email": "jane.doe@example.com",
-  "Password": "Pass@word987"
+  "Email": "user.admin@example.com",
+  "Password": "Pass@word456"
 }
 
 ### Book
@@ -74,4 +74,38 @@ Accept: application/json
 DELETE {{LibraryManagementSystem_HostAddress}}/api/v1/Book/{{id}}
 Accept: application/json
 
+### Member
+
+POST {{LibraryManagementSystem_HostAddress}}/api/v1/Member
+Content-Type: application/json
+
+{
+  "Name": "Member UserName 2",
+  "CardNumber": "0002"
+}
+
 ###
+
+GET {{LibraryManagementSystem_HostAddress}}/api/v1/Member
+Accept: application/json
+
+###
+
+GET {{LibraryManagementSystem_HostAddress}}/api/v1/Member/{{id}}
+Accept: application/json
+
+###
+
+PUT {{LibraryManagementSystem_HostAddress}}/api/v1/Member/{{id}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "Name": "Updated UserName Member",
+  "CardNumber": "10001"
+}
+
+###
+
+DELETE {{LibraryManagementSystem_HostAddress}}/api/v1/Member/{{id}}
+Accept: application/json
