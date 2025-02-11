@@ -131,7 +131,7 @@ public class BookControllerTest
     }
 
     [Fact]
-    public async Task GetBookById_WhenTodoExists_ReturnsTodoItemDto()
+    public async Task GetBookById_WhenBookExists_ReturnsBookDto()
     {
         // Arrange
         _mockRepository.Setup(r => r.GetBookByIdAsync(It.IsAny<int>()))
