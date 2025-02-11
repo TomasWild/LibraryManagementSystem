@@ -52,16 +52,15 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddDistributedMemoryCache();
 
-builder.Services.AddAutoMapper(typeof(BookProfile));
-builder.Services.AddAutoMapper(typeof(MemberProfile));
+builder.Services.AddAutoMapper(typeof(BookProfile), typeof(MemberProfile));
 
 builder.Services.AddTransient<LoggingMiddleware>();
-
-builder.Services.AddSingleton<ICacheService, CacheService>();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
+
+builder.Services.AddSingleton<ICacheService, CacheService>();
 
 builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
