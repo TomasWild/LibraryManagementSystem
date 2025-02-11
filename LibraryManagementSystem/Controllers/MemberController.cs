@@ -40,7 +40,7 @@ public class MemberController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<MemberDto>> GetAllMembers()
+    public async Task<IActionResult> GetAllMembers()
     {
         var cacheKey = $"members_{DateTime.UtcNow:yyyyMMdd}";
         var cachedMembers = await _cacheService.GetAsync<List<MemberDto>>(cacheKey);
@@ -59,7 +59,7 @@ public class MemberController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<MemberDto>> GetMemberById([FromRoute] int id)
+    public async Task<IActionResult> GetMemberById([FromRoute] int id)
     {
         var cacheKey = $"member_{id}";
         var cachedMember = await _cacheService.GetAsync<MemberDto>(cacheKey);
